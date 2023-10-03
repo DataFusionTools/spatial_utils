@@ -32,7 +32,7 @@ class SpatialUtils:
     i: str = "2000"
     j: str = "2000"
     max_workers: int = 500
-    AHN_data: np.ndarray = np.empty((0, 3))
+    AHN_data: List = field(default_factory=list)
     surface_line: List = field(default_factory=list) #TODO to be simplified or clarified, why are each element made of 4 elements?
 
     def __post_init__(self):
