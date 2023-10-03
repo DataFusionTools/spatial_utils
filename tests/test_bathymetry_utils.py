@@ -9,14 +9,20 @@ from spatial_utils.GWS_RD_conversion import GWSRDConvertor
 from spatial_utils.ahn_utils import SpatialUtils
 from spatial_utils.bathymetry_utils import split_trajectory, \
     get_surface_line_from_raster
+from tests.utils import TestUtils
 
 
 class TestRasterUtils():
 
     def test_raster_bathymetry_case(self):
         """Test Case for Prumer. The shapefile contains a Polyline intersecting the area covered in the raster."""
-        path_raster = Path(__file__).parent / "test_input/bathymetry_data" / "clipped_grey.tif"
-        path_shp = Path(__file__).parent / "test_input/bathymetry_data" / "dense_trajectory.zip"
+        path_raster = str(
+            TestUtils.get_test_files_from_local_test_dir("bathymetry_data", "clipped_grey.tif")[0]
+        )
+        path_shp = str(
+            TestUtils.get_test_files_from_local_test_dir("bathymetry_data", "dense_trajectory.zip")[0]
+        )
+
         with rasterio.open(path_raster) as src:
             shapefile_obj = shapefile.Reader(path_shp)
 
