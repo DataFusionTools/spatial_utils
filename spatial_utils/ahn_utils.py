@@ -15,7 +15,6 @@ class DataTypeAhn(Enum):
 class SpatialUtils:
     """Spatial utils class."""
 
-    ahn_type: str = "ahn3"
     data_type: str = DataTypeAhn.DTM.value
     url_ahn: str = field(init=False)
     request: str = "GetFeatureInfo"
@@ -40,21 +39,16 @@ class SpatialUtils:
         Post initialisation.
         Check type of AHN and define the fields accordingly.
         """
-        self.url_ahn = (
-            f"https://service.pdok.nl/rws/{self.ahn_type}/wms/v1_0"
-        )
-        if self.ahn_type == "ahn2":
-            self.layers = f"{self.ahn_type}_5m"
-            self.query_layers = f"{self.ahn_type}_5m"
-        else:
-            self.layers = f"{self.ahn_type}_05m_{self.data_type}"
-            self.query_layers = f"{self.ahn_type}_05m_{self.data_type}"
+        self.url_ahn = "https://service.pdok.nl/rws/ahn/wms/v1_0"
+        self.layers = f"{self.data_type}_05m"
+        self.query_layers = f"{self.data_type}_05m"
 
     @property
     def dictionary_parameters(self):
         dictionary_parameters = asdict(self)
         dictionary_parameters.pop("url_ahn")
-        dictionary_parameters.pop("ahn_type")
+        dictionary_parameters.pop("data_type")
+        dictionary_parameters.pop("max_workers")
         dictionary_parameters.pop("AHN_data")
         dictionary_parameters.pop("surface_line")
 
@@ -123,7 +117,7 @@ class SpatialUtils:
         :param point:
         :param idx:
         """
-        self.bbox = f"{point[0] - 1000}, {point[1] - 1000}, {point[0] + 1000}, {point[1] + 1000}"
+        self.bbox = f"{point[0] - 1000},{point[1] - 1000},{point[0] + 1000},{point[1] + 1000}"
         response = requests.get(self.url_ahn, params=self.dictionary_parameters)
         ahn_value = self.get_ahn_value_from_response(response)
         if ahn_value is not None:
